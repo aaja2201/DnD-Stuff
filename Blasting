@@ -1,0 +1,85 @@
+import random
+to_hit=int(25)
+attack_number=int(input('How many attacks? '))
+special_boost=input('Are you using the -5 +10 ability? ')
+advantage=input('Do you have advantage? ')
+is_force=input('Are you dealing force damage? ')
+armor_class=int(input('The target AC is: '))
+single_target=input('Is this all on a single target? ')
+if special_boost=='Y' or special_boost=='y' or special_boost=='yes':
+    special_boost='Yes'
+if advantage=='Y' or advantage=='y' or advantage=='yes':
+    advantage='Yes'
+if is_force=='Y' or is_force=='y' or is_force=='yes':
+    is_force='Yes'
+if single_target=='Y' or single_target=='y' or single_target=='yes':
+    single_target='Yes'
+base_rolls=[]
+n=0
+#rolling d20s
+while n<attack_number:
+    if advantage=='Yes':    
+        rolls=[]
+        rolls.append(random.randrange(1,20))
+        rolls.append(random.randrange(1,20))
+        rolls.append(random.randrange(1,20))
+        base_rolls.append(max(rolls))
+    else:
+        base_rolls.append(random.randrange(1,20))
+    n=n+1
+damage_rolls=[]
+n=0
+#rolling damage
+while n<attack_number:
+    damage=[]
+    if base_rolls[n]>17:
+        damage.append(random.randrange(1,10))
+        while damage[0]<3 and is_force=='Yes':
+            damage[0]=random.randrange(1,10)
+        damage.append(random.randrange(1,10))
+        while damage[1]<3 and is_force=='Yes':
+            damage[1]=random.randrange(1,10)
+        damage.append(random.randrange(1,10))
+        while damage[2]<3 and is_force=='Yes':
+            damage[2]=random.randrange(1,10)
+        damage.append(random.randrange(1,10))
+        while damage[3]<3 and is_force=='Yes':
+            damage[3]=random.randrange(1,10)
+        if special_boost=='Yes':
+            damage_rolls.append(sum(damage,42))
+        else:
+            damage_rolls.append(sum(damage,22))
+    else:
+        damage.append(random.randrange(1,10))
+        while damage[0]<3 and is_force=='Yes':
+            damage[0]=random.randrange(1,10)
+        damage.append(random.randrange(1,10))
+        while damage[1]<3 and is_force=='Yes':
+            damage[1]=random.randrange(1,10)
+        if special_boost=='Yes':
+            damage_rolls.append(sum(damage,21))
+        else:
+            damage_rolls.append(sum(damage,11))
+    n=n+1
+#overall attack roll
+final_rolls=[]
+n=0
+while n<attack_number:
+    if base_rolls[n]>17:
+        base_rolls[n]=base_rolls[n]+10
+    if special_boost=='Yes':
+        final_rolls.append(base_rolls[n]+to_hit-5)
+    else:
+        final_rolls.append(base_rolls[n]+to_hit)
+    n=n+1
+#Does it hit?
+n=0
+single_target_damage=0
+while n<attack_number:
+    if final_rolls[n]>=armor_class:
+        if single_target=="Yes":
+            single_target_damage=single_target_damage+damage_rolls[n]
+        else:
+            print(final_rolls[n],damage_rolls[n])
+    n=n+1
+print(single_target_damage)
