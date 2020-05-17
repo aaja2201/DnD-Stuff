@@ -5,6 +5,7 @@ special_boost=input('Are you using the -5 +10 ability? ')
 advantage=input('Do you have advantage? ')
 is_force=input('Are you dealing force damage? ')
 armor_class=int(input('The target AC is: '))
+twinned=input('Are these attacks twinned? ')
 single_target=input('Is this all on a single target? ')
 if special_boost=='Y' or special_boost=='y' or special_boost=='yes':
     special_boost='Yes'
@@ -12,8 +13,11 @@ if advantage=='Y' or advantage=='y' or advantage=='yes':
     advantage='Yes'
 if is_force=='Y' or is_force=='y' or is_force=='yes':
     is_force='Yes'
-if single_target=='Y' or single_target=='y' or single_target=='yes':
+if twinned=='Y' or twinned=='y' or twinned=='yes':
+    twinned='Yes'
+if single_target=='Y' or single_target=='y' or single_target=='yes' or single_target=='Yes':
     single_target='Yes'
+    twinned='No'
 base_rolls=[]
 n=0
 #rolling d20s
@@ -77,9 +81,12 @@ n=0
 single_target_damage=0
 while n<attack_number:
     if final_rolls[n]>=armor_class:
-        if single_target=="Yes":
+        if single_target=='Yes':
             single_target_damage=single_target_damage+damage_rolls[n]
         else:
             print(final_rolls[n],damage_rolls[n])
+    elif single_target !='Yes':
+        print('MISS')
     n=n+1
-print(single_target_damage)
+if single_target=='Yes':
+    print(single_target_damage)
